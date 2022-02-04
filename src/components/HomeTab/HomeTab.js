@@ -22,7 +22,6 @@ const HomeTab = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useSelector(transactionsSelectors.getTransactions);
   const isLoading = useSelector(transactionsSelectors.getIsLoading);
-  console.log(data);
 
   const dispatch = useDispatch();
   const {
@@ -38,7 +37,7 @@ const HomeTab = () => {
     // pageCount,
     // gotoPage,
     // nextPage,
-    // previousPage,
+    // previousPage, 
     // setPageSize,
     // state: { pageIndex, pageSize },
   } = useTable(

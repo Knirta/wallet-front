@@ -5,17 +5,17 @@ import { BACK_END } from "../../assets/API/BACK_END";
 
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetchTransactions",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
       const { data: response } = await axios.get(
-        `${BACK_END}/api/transactions`
+        `${BACK_END}/api/transactions`, { params }
       );
       return response.data.result;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
-);
+); 
 
 export const addTransaction = createAsyncThunk(
   "transactions/addTransaction",

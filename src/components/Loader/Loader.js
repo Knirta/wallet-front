@@ -6,7 +6,7 @@ const LoaderComponent = () => {
 	return (
 		<Loader
 			className='loader'
-			type='Circles'
+			type='Oval'
 			color='#4A56E2'
 			height={100}
 			width={100}
