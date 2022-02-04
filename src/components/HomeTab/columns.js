@@ -6,10 +6,7 @@ export const COLUMNS = [
     accessor: "date",
     disableFilters: true,
     sticky: "centre",
-    Cell: ({value}) => {
-      const date = new Date(value);
-      return format(date, 'dd.MM.yy');
-    },
+    Cell: ({value}) => format(new Date(value), 'dd.MM.yy'),
   },
   {
     Header: "Тип",
