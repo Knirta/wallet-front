@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSortBy, useTable } from "react-table";
+import { useSortBy, useTable, usePagination } from "react-table";
 import Media from "react-media";
 import { COLUMNS } from "./columns";
 import { AiOutlineUp, AiOutlineDown } from "react-icons/ai";
-// import { BiChevronsLeft, BiChevronRight } from "react-icons/bi";
 import { nanoid } from "nanoid";
 import {
   transactionsOperations,
@@ -21,6 +20,7 @@ import "./homeTab.scss";
 const HomeTab = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useSelector(transactionsSelectors.getTransactions);
+  const totalPages = useSelector(transactionsSelectors.getTotalPages);
   const isLoading = useSelector(transactionsSelectors.getIsLoading);
 
   const dispatch = useDispatch();
@@ -28,31 +28,33 @@ const HomeTab = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    state: { pageIndex, pageSize }, 
+    pageCount,
+    gotoPage,
     prepareRow,
-    // page,
-    // canNextPage,
-    // canPreviousPage,
-    // pageOptions,
-    // pageCount,
-    // gotoPage,
-    // nextPage,
-    // previousPage, 
-    // setPageSize,
-    // state: { pageIndex, pageSize },
+    setPageSize,
   } = useTable(
     {
       columns,
       data,
-      // , initialState: { pageSize: 5 }
+      initialState: {pageIndex: 0, pageSize: 5},
+      manualPagination: true,
+      autoResetPage: false,
+      pageCount: totalPages,
     },
-    useSortBy
-    // usePagination
+    useSortBy,
+    usePagination
   );
 
   useEffect(() => {
-    dispatch(transactionsOperations.fetchTransactions());
-  }, [dispatch]);
+    dispatch(transactionsOperations.fetchTransactions({page: pageIndex + 1, limit: pageSize}));
+  }, [dispatch, pageIndex, pageSize]);
   
   return ( isLoading ? <Loader /> : (
     <>
@@ -68,6 +70,7 @@ const HomeTab = () => {
                 {!mobile ? (
                   <HomeTabMobile />
                 ) : (
+                  <>
                   <table className="HomeTab-secondary" {...getTableProps()}>
                     <thead className="HomeTab__header">
                       {headerGroups.map((headerGroup) => (
@@ -106,7 +109,7 @@ const HomeTab = () => {
                     </thead>
 
                     <tbody {...getTableBodyProps()}>
-                      {rows.map((row) => {
+                      {page.map((row) => {
                         prepareRow(row);
                         return (
                           <tr
@@ -138,25 +141,39 @@ const HomeTab = () => {
                       })}
                     </tbody>
                   </table>
-                )}
-                {/* 
-                <div className="HomeTab-secondary_pagination">
-                  <button
-                    disabled={!canPreviousPage}
-                    onClick={() => previousPage()}
-                  >
-                    <BiChevronsLeft />
-                  </button>
-                  <button disabled={!canNextPage} onClick={() => nextPage()}>
-                    <BiChevronRight />
-                  </button>
-                </div>
 
-                <div className="HomeTab-secondary_pagination">
-                  <span>
-                    Page {pageIndex + 1} of {pageOptions.length}
-                  </span>
-                </div> */}
+                  <div>
+                    <span>
+                      Page{' '}
+                      <strong>
+                        {pageIndex + 1} of {pageOptions.length}
+                      </strong>{' '}
+                    </span>
+                    <span>
+                      | Go to page: {' '}
+                      <input type="number" defaultValue={pageIndex + 1} min="1" max={pageCount}
+                      onChange={e => {
+                        const pageNumber = e.target.value ? Number(e.target.value) -1 : 0;
+                        gotoPage(pageNumber);
+                      }}
+                      style={{width: '50px'}} />
+                    </span>
+                    <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
+                      {[5, 10, 15].map(pageSize => (<option key={pageSize} value={pageSize}>
+                        Show {pageSize}
+                        </option>))}
+                      </select>
+                    <button type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
+                    <button type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>{' '}
+                    <button type="button" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+                    <button type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
+                  </div>
+                  </>
+                )}
+                
+              
+
+              
               </div>
             )}
           </Media>

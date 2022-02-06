@@ -4,7 +4,6 @@ export const COLUMNS = [
   {
     Header: "Дата",
     accessor: "date",
-    disableFilters: true,
     sticky: "centre",
     Cell: ({value}) => format(new Date(value), 'dd.MM.yy'),
   },
@@ -27,9 +26,11 @@ export const COLUMNS = [
     Header: "Сумма",
     accessor: "amount",
     sticky: "right",
+    Cell: ({value}) => value.toFixed(2),
   },
   {
     Header: "Баланс",
     accessor: "balance",
+    Cell: ({value}) => value.toFixed(2),
   },
 ];

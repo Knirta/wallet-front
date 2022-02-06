@@ -16,7 +16,7 @@ const Balance = () => {
   return (
     <div className="balance_container">
       <p className="balance_title">ВАШ БАЛАНС</p>
-      <p className="balance_result">&#8372; {balance}</p>
+      <p className="balance_result">&#8372; { balance.toFixed(2) }</p>
     </div>
   );
 };

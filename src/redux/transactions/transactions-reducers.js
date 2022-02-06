@@ -16,7 +16,7 @@ const categoriesList = createReducer(null, {
 });
 
 const items = createReducer([], {
-  [fetchTransactions.fulfilled]: (_, { payload }) => payload,
+  [fetchTransactions.fulfilled]: (_, { payload }) => payload.result,
   [addTransaction.fulfilled]: (state, { payload }) => [payload, ...state],
 });
 
@@ -41,10 +41,15 @@ const error = createReducer(null, {
   [getTransactionDate.pending]: (_, { payload }) => null,
 });
 
+const totalPages = createReducer({}, {
+  [fetchTransactions.fulfilled]: (_, {payload}) => payload.totalPages,
+});
+
 export default combineReducers({
   stats,
   categoriesList,
   items,
   isLoading,
   error,
+  totalPages,
 });

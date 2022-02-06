@@ -10,7 +10,7 @@ export const fetchTransactions = createAsyncThunk(
       const { data: response } = await axios.get(
         `${BACK_END}/api/transactions`, { params }
       );
-      return response.data.result;
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
