@@ -4,4 +4,4 @@ export const getCategoriesStats = state => state.transactions.stats;
 export const getCategoriesList = state => state.transactions.categoriesList;
 export const getBalance = state => state.transactions.balance;
 export const getIsLoading = state => state.transactions.isLoading;
-export const getTotalPages = state => state.transactions.totalPages;
+export const getPagination = state => state.transactions.pagination;

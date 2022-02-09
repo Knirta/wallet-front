@@ -9,21 +9,25 @@ import {
   transactionsOperations,
   transactionsSelectors,
 } from "../../redux/transactions";
+import { TablePagination } from "@mui/material";
 
 import { HomeTabMobile } from "./HomeTabMobile";
 import ModalAddTransaction from "../ModalAddTransaction";
 import NoTransaction from "../NoTransaction";
-import Loader from '../Loader'
+import Loader from '../Loader';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import "./homeTab.scss";
 
 const HomeTab = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useSelector(transactionsSelectors.getTransactions);
-  const totalPages = useSelector(transactionsSelectors.getTotalPages);
+  const pagination = useSelector(transactionsSelectors.getPagination);
   const isLoading = useSelector(transactionsSelectors.getIsLoading);
-
   const dispatch = useDispatch();
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -46,7 +50,7 @@ const HomeTab = () => {
       initialState: {pageIndex: 0, pageSize: 5},
       manualPagination: true,
       autoResetPage: false,
-      pageCount: totalPages,
+      pageCount: pagination.totalPages,
     },
     useSortBy,
     usePagination
@@ -142,7 +146,21 @@ const HomeTab = () => {
                     </tbody>
                   </table>
 
-                  <div>
+                  <TablePagination 
+                    component="div"
+                    count={pagination.totalRows}
+                    page={pageIndex}
+                    onPageChange={(e, page) => gotoPage(page)}
+                    rowsPerPage={pageSize}
+                    rowsPerPageOptions={[5, 10, 15]}
+                    labelRowsPerPage="Строк на странице:"
+                    onRowsPerPageChange={e => setPageSize(Number(e.target.value))}
+                    showFirstButton
+                    showLastButton
+                    backIconButtonProps={{children: <ArrowBackIcon /> }}
+                  />
+
+                  {/* <div>
                     <span>
                       Page{' '}
                       <strong>
@@ -167,7 +185,7 @@ const HomeTab = () => {
                     <button type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>{' '}
                     <button type="button" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
                     <button type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
-                  </div>
+                  </div> */}
                   </>
                 )}
                 

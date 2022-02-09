@@ -41,8 +41,8 @@ const error = createReducer(null, {
   [getTransactionDate.pending]: (_, { payload }) => null,
 });
 
-const totalPages = createReducer({}, {
-  [fetchTransactions.fulfilled]: (_, {payload}) => payload.totalPages,
+const pagination = createReducer({}, {
+  [fetchTransactions.fulfilled]: (_, {payload}) => ({totalPages: payload.totalPages, totalRows: payload.totalDocs}),
 });
 
 export default combineReducers({
@@ -51,5 +51,5 @@ export default combineReducers({
   items,
   isLoading,
   error,
-  totalPages,
+  pagination,
 });
